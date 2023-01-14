@@ -5,34 +5,24 @@ using UnityEngine;
 
 public class WaveNumber : MonoBehaviour
 {
-    [SerializeField] private Spawner _spawner;
+    [SerializeField] private Spawners _spawners;
     [SerializeField] private TMP_Text _text;
 
-    private bool _isPlusWave = true;
     private int _wave = 1;
 
     private void OnEnable()
     {
-        _spawner.SelectWave += PlusWave;
+        _spawners.NextWave += PlusWave;
     }
 
     private void OnDisable()
     {
-        _spawner.SelectWave -= PlusWave;
-    }
-
-    private void Update()
-    {
-        if(_isPlusWave && _spawner.IsWaveChanged == false)
-        {
-            _text.text = _wave.ToString();
-            _isPlusWave = false;
-        }
+        _spawners.NextWave -= PlusWave;
     }
 
     private void PlusWave()
     {
-        _isPlusWave = true;
         _wave++;
+        _text.text = _wave.ToString();
     }
 }
