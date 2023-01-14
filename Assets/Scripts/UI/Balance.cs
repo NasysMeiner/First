@@ -7,26 +7,26 @@ public class Balance : MonoBehaviour
 {
     [SerializeField] private TMP_Text _text;
 
-    private int _money = 0;
-    private int _allMoney;
+    private int _currentMoney = 0;
+    private int _earnedMoney;
 
-    public int Money { get { return _money; } private set { } }
+    public int Money { get { return _currentMoney; } private set { } }
 
-    public int AllMoney { get { return _allMoney; } private set { } }
+    public int AllMoney { get { return _earnedMoney; } private set { } }
 
     private void Start()
     {
-        _text.text = _money.ToString();
-        _allMoney = _money;
+        _text.text = _currentMoney.ToString();
+        _earnedMoney = _currentMoney;
     }
 
     public void ChangeMoney(int money)
     {
-        _money += money;
+        _currentMoney += money;
 
         if(money > 0)
-            _allMoney += money;
+            _earnedMoney += money;
 
-        _text.text = _money.ToString();
+        _text.text = _currentMoney.ToString();
     }
 }

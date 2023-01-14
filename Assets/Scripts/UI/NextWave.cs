@@ -1,62 +1,48 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class NextWave : MonoBehaviour
 {
-    [SerializeField] private List<Spawner> _spawners = new List<Spawner>();
-    [SerializeField] private int _minEnemy = 2;
     [SerializeField] private GameObject _gameObject;
+    [SerializeField] private Spawners _spawners;
 
-    private int _allEnenmy = 0;
-    private bool _isChanged;
-    private bool _isPressed = false;
+    private bool _isPressedButton = false;
+
+    public event UnityAction ChangePressButton;
+    public event UnityAction ChangeTimeNextWave;
 
     private void OnEnable()
     {
-        foreach(Spawner spawner in _spawners)
-        {
-            spawner.SelectWave += ChangePressButton;
-        }
+        ChangePressButton += OnChangePressButton;
+        _spawners.NextWave += OnNextWave;
     }
 
     private void OnDisable()
     {
-        foreach (Spawner spawner in _spawners)
-        {
-            spawner.SelectWave -= ChangePressButton;
-        }
+        ChangePressButton -= OnChangePressButton;
+        _spawners.NextWave -= OnNextWave;
     }
 
-    private void Update()
+    public void RunEvent()
     {
-        CalculeitNumberEnemy();
-
-        if((_allEnenmy <= _minEnemy || _isChanged) && _isPressed == false)
-            _gameObject.SetActive(true);
-        else
-            _gameObject.SetActive(false);
+        ChangePressButton?.Invoke();
     }
 
-    public void ChangeActive()
+    public void ClickButton()
     {
         _gameObject.SetActive(false);
-        _isPressed = true;
+        _isPressedButton = true;
+        ChangeTimeNextWave?.Invoke();
     }
 
-    private void ChangePressButton()
+    private void OnChangePressButton()
     {
-        _isPressed = false;
+        if(_isPressedButton == false)
+            _gameObject.SetActive(true);
     }
 
-    private void CalculeitNumberEnemy()
+    private void OnNextWave()
     {
-        _allEnenmy = 0;
-
-        foreach(Spawner spawner in _spawners)
-        {
-            _allEnenmy += spawner.GetAllEnemy();
-            _isChanged = spawner.IsWaveChanged;
-        }
+        _isPressedButton = false;
     }
 }

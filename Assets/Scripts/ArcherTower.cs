@@ -12,7 +12,7 @@ public class ArcherTower : Tower
         {
             BulletArcherTower bullet = Instantiate(_bullet, transform.GetChild(1).position, Quaternion.identity);
             bullet.UpgradeDamage(damageBullet);
-            bullet.Initilization(CalculetePosition(bullet), this);
+            bullet.initializeEnemy(CalculetePosition(bullet), this);
             ShotsDone++;
         }
     }

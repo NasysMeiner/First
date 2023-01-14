@@ -157,7 +157,6 @@ public abstract class Enemy : MonoBehaviour
     private void ChangeRotation()
     {
         Quaternion target = Quaternion.LookRotation(new Vector3(_direction.x, 0, _direction.z));
-        Debug.Log(target);
         transform.rotation = Quaternion.Lerp(transform.rotation, target, Time.deltaTime * _speed);
     }
 }

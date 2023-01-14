@@ -19,47 +19,39 @@ public class Spawner : MonoBehaviour
     [SerializeField] private float[] _upgrateStatsWizard;
     [SerializeField] private Balance _balance;
     [SerializeField] private List<Wave> _waves = new List<Wave>();
-    [SerializeField] private int ID;
     [SerializeField] private AudioSource _audioShotWarrior;
     [SerializeField] private AudioSource _audioShotWizard;
     [SerializeField] private Transform _trash;
+    [SerializeField] private NextWave _nextWaveButton;
+    [SerializeField] private WaveBar _waveBar;
 
     private float[] _currentStatsWarrior = new float[2];
     private float[] _currentStatsWizard = new float[2];
-    private int _nextWave = 0;
     private int _waveNumbers = 1;
     private int _respawnedEnemy = 0;
     private int _respawnedEnemyWizard = 0;
     private int _totalDyingNumberEnemy;
-    private int _allEnemy = 0;
-    private int _waveNumberEnemy;
+    private int _totalEnemySpawned = 0;
+    private int _waveNumberEnemy = 0;
     private float _currentTimeWaitingNextWave;
-    private float _time;
-    private bool _isWaveChanged = false;
-    private bool _isWaveEnd = false;
     private Wave _currentWave;
-    private bool _isEndGame;
+    private bool _isWaitNextWave;
+    private int _minEnemyToSkipTimeWave = 2;
 
     public event UnityAction ExitWave;
-    public event UnityAction SelectWave;
-
-    public bool IsWaveChanged { get { return _isWaveChanged; } private set { } }
-
-    public int NumbersEnemy { get { return _currentWave.NumberOfEnemy; } private set { } }
 
     public int TotalDyingNumberEnemy { get { return _totalDyingNumberEnemy; } private set {  } }
 
-    public bool IsEnaGame { get { return _isEndGame; } private set { } }
-
-    public int AllEnemy { get { return _allEnemy; } private set { } }
+    public int AllEnemy { get { return _totalEnemySpawned; } private set { } }
 
     private void OnEnable()
     {
         if(_gates != null)
             _gates.GatesChanged += OnDiedGates;
 
-        _spawners.NextWave += SelectNextWave;
         _currentWave = _waves[0];
+        _spawners.NextWave += SelectNextWave;
+        _nextWaveButton.ChangeTimeNextWave += OnChangeTimeNextWave;
     }
 
     private void OnDisable()
@@ -68,6 +60,7 @@ public class Spawner : MonoBehaviour
             _gates.GatesChanged -= OnDiedGates;
 
         _spawners.NextWave -= SelectNextWave;
+        _nextWaveButton.ChangeTimeNextWave -= OnChangeTimeNextWave;
     }
 
     private void Start()
@@ -81,23 +74,8 @@ public class Spawner : MonoBehaviour
         _currentStatsWizard[1] = _prefab[1].Damage;
         CountEnemyAllWaves();
         _spawners.CountTotalNumbersEnemy(AllEnemy);
-    }
-
-    private void Update()
-    {
-        if(_waveNumbers == 3)
-        {
-            UpgrateStatsEnemy();
-            _waveNumbers = 1;
-        }
-
-        Spawn();
-        _time += Time.deltaTime;
-    }
-
-    public void NextWave()
-    {
-        _nextWave = 1;
+        _waveBar.CalculeitMaxNumberEnemy();
+        StartCoroutine(Spawn());
     }
 
     public int GetAllEnemy()
@@ -110,58 +88,60 @@ public class Spawner : MonoBehaviour
         _gates = null;
     }
 
-    private void Spawn()
+    private IEnumerator Spawn()
     {
-        if (_time >= _currentTimeWaitingNextWave && _isWaveChanged)
-            _isWaveChanged = false;
-
-        if (_nextWave > 0)
+        if (_waveNumbers == 3)
         {
-            _currentTimeWaitingNextWave = 0;
-        }
-        else
-        {
-            _currentTimeWaitingNextWave = _timeWaitingNextWave;
+            UpgrateStatsEnemy();
+            _waveNumbers = 1;
         }
 
-        if (_currentWave.NumberOfEnemy != _waveNumberEnemy && _waves.Count > 0 && _isWaveChanged == false)
+        _nextWaveButton.RunEvent();
+        _waveBar.CalculeitMaxNumberEnemy();
+        _isWaitNextWave = true;
+
+        yield return new WaitForSeconds(_currentTimeWaitingNextWave);
+
+        _isWaitNextWave = false;
+        _currentTimeWaitingNextWave = _timeWaitingNextWave;
+
+        for (int i = 0; i < _currentWave.NumberOfEnemy; i++ )
         {
-            if (_respawnedEnemy == -1 && _time >= _timeSubwave)
+            if(_waveNumberEnemy == _currentWave.NumberOfEnemy - _minEnemyToSkipTimeWave)
+            {
+                _nextWaveButton.RunEvent();
+            }
+
+            if (_respawnedEnemy >= _wizardAfter)
+            {
+                if (_numbersWizard == _respawnedEnemyWizard)
+                    _respawnedEnemy = -1;
+
+                EnemySpawn(_prefab[1], _audioShotWizard, _currentStatsWizard);
+                _respawnedEnemyWizard++;
+                _waveNumberEnemy++;
+            }
+            else
+            {
+                EnemySpawn(_prefab[0], _audioShotWarrior, _currentStatsWarrior);
+                _respawnedEnemy++;
+                _waveNumberEnemy++;
+            }
+
+            _waveBar.ChangeValue();
+
+            if(_respawnedEnemyWizard == _numbersWizard)
             {
                 _respawnedEnemy = 0;
-                _time = 0;
+                yield return new WaitForSeconds(_timeSubwave);
             }
-
-            if (_time >= _timeRespawn && _respawnedEnemy != -1 && (_numbersWizard <= _respawnedEnemyWizard || _respawnedEnemy != -1))
+            else
             {
-                if (_respawnedEnemy == _wizardAfter)
-                {
-                    EnemySpawn(_prefab[1], _audioShotWizard, _currentStatsWizard);
-                    _respawnedEnemyWizard++;
-
-                    if(_numbersWizard == _respawnedEnemyWizard)
-                        _respawnedEnemy = -1;
-
-                    _time = 0;
-                    _waveNumberEnemy++;
-                }
-                else
-                {
-                    EnemySpawn(_prefab[0], _audioShotWarrior, _currentStatsWarrior);
-                    _respawnedEnemy++;
-                    _time = 0;
-                    _waveNumberEnemy++;
-                }
+                yield return new WaitForSeconds(_timeRespawn);
             }
         }
-        else
-        {
-            if (_waves.Count > 0 && _currentWave.NumberOfEnemy == _waveNumberEnemy && _isWaveEnd == false)
-            {
-                _isWaveEnd = true;
-                ExitWave?.Invoke();
-            }              
-        }
+
+        ExitWave?.Invoke();
     }
 
     private void UpgrateStatsEnemy()
@@ -178,16 +158,12 @@ public class Spawner : MonoBehaviour
         _waves.Remove(_waves[0]);
         _waveNumberEnemy = 0;
         _respawnedEnemy = 0;
-        _nextWave = 0;
-        _time = 0;
         _waveNumbers++;
-        _isWaveChanged = true;
-        _isWaveEnd = false;
 
         if (_waves.Count > 0)
         {
             _currentWave = _waves[0];
-            SelectWave?.Invoke();
+            StartCoroutine(Spawn());
         }    
     }
 
@@ -198,6 +174,14 @@ public class Spawner : MonoBehaviour
         enemy.UpgrateStats(upgrateStats[0], upgrateStats[1]);
         enemy.Instantiet(_townHall, _path, _gates, audio, _trash);
         enemy.Dying += OnEnemyDying;
+    }
+
+    private void OnChangeTimeNextWave()
+    {
+        if (_isWaitNextWave)
+            StopCoroutine(Spawn());
+        else
+            _currentTimeWaitingNextWave = 0;
     }
 
     private void OnEnemyDying(Enemy enemy)
@@ -211,7 +195,7 @@ public class Spawner : MonoBehaviour
     {
         foreach(Wave wave in _waves)
         {
-            _allEnemy += wave.NumberOfEnemy;
+            _totalEnemySpawned += wave.NumberOfEnemy;
         }
     }
 }
