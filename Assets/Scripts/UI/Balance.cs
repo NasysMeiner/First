@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Balance : MonoBehaviour
 {
@@ -9,6 +8,8 @@ public class Balance : MonoBehaviour
 
     private int _currentMoney = 0;
     private int _earnedMoney;
+
+    public event UnityAction ChangeBalance;
 
     public int Money { get { return _currentMoney; } private set { } }
 
@@ -28,5 +29,6 @@ public class Balance : MonoBehaviour
             _earnedMoney += money;
 
         _text.text = _currentMoney.ToString();
+        ChangeBalance?.Invoke();
     }
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ArcherTower : Tower
@@ -12,7 +10,7 @@ public class ArcherTower : Tower
         {
             BulletArcherTower bullet = Instantiate(_bullet, transform.GetChild(1).position, Quaternion.identity);
             bullet.UpgradeDamage(damageBullet);
-            bullet.initializeEnemy(CalculetePosition(bullet), this);
+            bullet.InitializeEnemy(CalculetePosition(bullet), this);
             ShotsDone++;
         }
     }

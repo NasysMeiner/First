@@ -29,7 +29,7 @@ public class BulletArcherTower : MonoBehaviour
         }
     }
 
-    public void initializeEnemy(Vector3 enemy, Tower tower)
+    public void InitializeEnemy(Vector3 enemy, Tower tower)
     {
         _enemy = enemy;
     }

@@ -20,8 +20,9 @@ public abstract class Enemy : MonoBehaviour
     private protected Vector3 _target;
     private protected Vector3 _direction;
     private protected int _currentAmount;
-    private protected int intermediate;
+    private protected int _intermediate;
     private protected Transform _trash;
+    private protected bool _isLaunchedCorrutain = false;
 
     public event UnityAction<Enemy> Dying;
 
@@ -52,7 +53,12 @@ public abstract class Enemy : MonoBehaviour
     private void Update()
     {
         Move();
-        ApplyDamage();
+
+        if (_isLaunchedCorrutain == false && _speed == 0)
+        {
+            _isLaunchedCorrutain = true;
+            StartCoroutine(ApplyDamage());
+        }    
 
         if (_healpoints <= 0)
         {
@@ -61,9 +67,9 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-    public abstract void ApplyDamage();
+    public abstract IEnumerator ApplyDamage();
 
-    public void Instantiet(TownHall townHall, Path[] path, Gates gates, AudioSource audio, Transform trash)
+    public void Initialize(TownHall townHall, Path[] path, Gates gates, AudioSource audio, Transform trash)
     {
         _audioShot = audio;
         _objects.Add(townHall);
@@ -85,7 +91,7 @@ public abstract class Enemy : MonoBehaviour
 
         _currentAmount = _points.Count - 1;
         _target = _points[_currentAmount];
-        intermediate = _speed;
+        _intermediate = _speed;
         _trash = trash;
     }
 
@@ -99,7 +105,8 @@ public abstract class Enemy : MonoBehaviour
     {
         _currentAmount--;
         _target = _points[_currentAmount];
-        _speed = intermediate;
+        _speed = _intermediate;
+        _isLaunchedCorrutain = false;
         _points.Remove(_points[1]);
         _objects.Remove(_objects[1]);
     }
@@ -137,7 +144,7 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-    private bool MakeCheck(Vector3 target, Target structure,float maxDistans)
+    private bool MakeCheck(Vector3 target, Target structure, float maxDistans)
     {
         if (target.z - transform.position.z <= maxDistans)
         {
