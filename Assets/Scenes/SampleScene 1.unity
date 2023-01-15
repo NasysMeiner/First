@@ -180,10 +180,11 @@ MonoBehaviour:
   - NumberOfEnemy: 20
   - NumberOfEnemy: 22
   - NumberOfEnemy: 26
-  ID: 0
   _audioShotWarrior: {fileID: 1346029627}
   _audioShotWizard: {fileID: 938547205}
   _trash: {fileID: 474079938}
+  _nextWaveButton: {fileID: 2123160694}
+  _waveBar: {fileID: 813898268}
 --- !u!4 &114175376
 Transform:
   m_ObjectHideFlags: 0
@@ -425,7 +426,6 @@ GameObject:
   - component: {fileID: 392678160}
   - component: {fileID: 392678162}
   - component: {fileID: 392678161}
-  - component: {fileID: 392678163}
   - component: {fileID: 392678164}
   m_Layer: 5
   m_Name: Shop
@@ -496,60 +496,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 392678159}
   m_CullTransparentMesh: 1
---- !u!114 &392678163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 392678159}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c008b7f90a148d14ca5d727a7dd9f2f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _products:
-  - _icon: {fileID: 21300000, guid: 6bd9f9abf5fcc034991a8853fc38784c, type: 3}
-    _title: "\u0423\u0440\u043E\u043D"
-    _price: 100
-    _numberUpgrate: 1
-    _upgrate: 2
-    _value: 50
-  - _icon: {fileID: 21300000, guid: 48229902bd35a18438594841a4940353, type: 3}
-    _title: "\u0421\u043A\u043E\u0440\u043E\u0441\u0442\u044C \u0430\u0442\u0430\u043A\u0438"
-    _price: 136
-    _numberUpgrate: 2
-    _upgrate: 0.1
-    _value: 100
-  - _icon: {fileID: 21300000, guid: a687569988e00ff4cbeb4d2feadd6bc2, type: 3}
-    _title: "\u0420\u0435\u043C\u043E\u043D\u0442 \u0440\u0430\u0442\u0443\u0448\u0438
-      +10"
-    _price: 10
-    _numberUpgrate: 3
-    _upgrate: 10
-    _value: 35
-  - _icon: {fileID: 21300000, guid: 49ad78dc7fdd28f40b616200c0029ac7, type: 3}
-    _title: "\u041F\u043E\u0432\u044B\u0448\u0435\u043D\u0438\u0435 HP +50"
-    _price: 70
-    _numberUpgrate: 4
-    _upgrate: 50
-    _value: 70
-  - _icon: {fileID: 21300000, guid: a687569988e00ff4cbeb4d2feadd6bc2, type: 3}
-    _title: "\u0420\u0435\u043C\u043E\u043D\u0442 \u043A\u0430\u043B\u0438\u0442\u043A\u0438"
-    _price: 5
-    _numberUpgrate: 5
-    _upgrate: 5
-    _value: 25
-  - _icon: {fileID: 21300000, guid: 49ad78dc7fdd28f40b616200c0029ac7, type: 3}
-    _title: "\u041F\u043E\u0432\u044B\u0448\u0435\u043D\u0438\u0435 HP + 20 \u043A\u0430\u043B\u0438\u0442\u043A\u0438"
-    _price: 50
-    _numberUpgrate: 6
-    _upgrate: 20
-    _value: 50
-  _containers: {fileID: 1565045217}
-  _tamplate: {fileID: 1591843043851475356, guid: ebb40d26cf13f1945b9d0b4cfe5144b4, type: 3}
-  _balance: {fileID: 1770850526}
-  _shopDistributor: {fileID: 2123160695}
 --- !u!114 &392678164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1118,7 +1064,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.24033743, y: 0.69039124}
   m_AnchorMax: {x: 0.75600004, y: 0.9417824}
-  m_AnchoredPosition: {x: 0.5, y: 0.6999817}
+  m_AnchoredPosition: {x: 0.5, y: 0.7000122}
   m_SizeDelta: {x: 31, y: 9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &527655838
@@ -1939,7 +1885,6 @@ MonoBehaviour:
   - {fileID: 1649155419}
   - {fileID: 1263188002}
   _image: {fileID: 813898266}
-  _spawners: {fileID: 0}
 --- !u!1 &829372953
 GameObject:
   m_ObjectHideFlags: 0
@@ -2729,6 +2674,7 @@ GameObject:
   - component: {fileID: 944489976}
   - component: {fileID: 944489975}
   - component: {fileID: 944489974}
+  - component: {fileID: 944489977}
   m_Layer: 5
   m_Name: Shop
   m_TagString: Untagged
@@ -2849,6 +2795,60 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 944489972}
   m_CullTransparentMesh: 1
+--- !u!114 &944489977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 944489972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c008b7f90a148d14ca5d727a7dd9f2f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _products:
+  - _icon: {fileID: 21300000, guid: 6bd9f9abf5fcc034991a8853fc38784c, type: 3}
+    _title: "\u0423\u0440\u043E\u043D"
+    _price: 100
+    _numberUpgrate: 1
+    _upgrate: 2
+    _value: 50
+  - _icon: {fileID: 21300000, guid: 48229902bd35a18438594841a4940353, type: 3}
+    _title: "\u0421\u043A\u043E\u0440\u043E\u0441\u0442\u044C \u0430\u0442\u0430\u043A\u0438"
+    _price: 136
+    _numberUpgrate: 2
+    _upgrate: 0.1
+    _value: 100
+  - _icon: {fileID: 21300000, guid: a687569988e00ff4cbeb4d2feadd6bc2, type: 3}
+    _title: "\u0420\u0435\u043C\u043E\u043D\u0442 \u0440\u0430\u0442\u0443\u0448\u0438
+      +10"
+    _price: 10
+    _numberUpgrate: 3
+    _upgrate: 10
+    _value: 35
+  - _icon: {fileID: 21300000, guid: 49ad78dc7fdd28f40b616200c0029ac7, type: 3}
+    _title: "\u041F\u043E\u0432\u044B\u0448\u0435\u043D\u0438\u0435 HP +50"
+    _price: 70
+    _numberUpgrate: 4
+    _upgrate: 50
+    _value: 70
+  - _icon: {fileID: 21300000, guid: a687569988e00ff4cbeb4d2feadd6bc2, type: 3}
+    _title: "\u0420\u0435\u043C\u043E\u043D\u0442 \u043A\u0430\u043B\u0438\u0442\u043A\u0438"
+    _price: 5
+    _numberUpgrate: 5
+    _upgrate: 5
+    _value: 25
+  - _icon: {fileID: 21300000, guid: 49ad78dc7fdd28f40b616200c0029ac7, type: 3}
+    _title: "\u041F\u043E\u0432\u044B\u0448\u0435\u043D\u0438\u0435 HP + 20 \u043A\u0430\u043B\u0438\u0442\u043A\u0438"
+    _price: 50
+    _numberUpgrate: 6
+    _upgrate: 20
+    _value: 50
+  _containers: {fileID: 1565045217}
+  _tamplate: {fileID: 1591843043851475356, guid: ebb40d26cf13f1945b9d0b4cfe5144b4, type: 3}
+  _balance: {fileID: 1770850526}
+  _shopDistributor: {fileID: 2123160695}
 --- !u!1 &952792813
 GameObject:
   m_ObjectHideFlags: 0
@@ -3242,7 +3242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0afbc4f41e2d11a42a3f366ca8fc6093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawner: {fileID: 0}
+  _spawners: {fileID: 162027607}
   _text: {fileID: 1026513745}
 --- !u!1 &1036895338
 GameObject:
@@ -3926,10 +3926,11 @@ MonoBehaviour:
   - NumberOfEnemy: 20
   - NumberOfEnemy: 22
   - NumberOfEnemy: 26
-  ID: 0
   _audioShotWarrior: {fileID: 1346029627}
   _audioShotWizard: {fileID: 938547205}
   _trash: {fileID: 474079938}
+  _nextWaveButton: {fileID: 2123160694}
+  _waveBar: {fileID: 813898268}
 --- !u!4 &1263188003
 Transform:
   m_ObjectHideFlags: 0
@@ -4835,10 +4836,11 @@ MonoBehaviour:
   - NumberOfEnemy: 20
   - NumberOfEnemy: 22
   - NumberOfEnemy: 26
-  ID: 0
   _audioShotWarrior: {fileID: 1346029627}
   _audioShotWizard: {fileID: 938547205}
   _trash: {fileID: 474079938}
+  _nextWaveButton: {fileID: 2123160694}
+  _waveBar: {fileID: 813898268}
 --- !u!4 &1649155420
 Transform:
   m_ObjectHideFlags: 0
@@ -6856,12 +6858,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 591cc0ba0e7b3374dac80c5a4333a88d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawners:
-  - {fileID: 114175375}
-  - {fileID: 1649155419}
-  - {fileID: 1263188002}
-  _minEnemy: 2
   _gameObject: {fileID: 2071185552}
+  _spawners: {fileID: 162027607}
 --- !u!114 &2123160695
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -172,7 +172,7 @@ public class Spawner : MonoBehaviour
         Vector3 positionEnemy = new Vector3(transform.position.x + Random.Range(-4, 4), transform.position.y, transform.position.z);
         Enemy enemy = Instantiate(prefab, positionEnemy, Quaternion.identity);
         enemy.UpgrateStats(upgrateStats[0], upgrateStats[1]);
-        enemy.Instantiet(_townHall, _path, _gates, audio, _trash);
+        enemy.Initialize(_townHall, _path, _gates, audio, _trash);
         enemy.Dying += OnEnemyDying;
     }
 

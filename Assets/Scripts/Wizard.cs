@@ -1,26 +1,28 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Wizard : Enemy
 {
     [SerializeField] private BulletWizard _bulletWizard;
 
-    public override void ApplyDamage()
+    public override IEnumerator ApplyDamage()
     {
-        if (_speed == 0)
+        bool isWork = true;
+
+        while (isWork)
         {
-            if (_time >= _timeBetweenAttacks)
+            yield return new WaitForSeconds(_timeBetweenAttacks);
+
+            var bullet = Instantiate(_bulletWizard, transform.position, Quaternion.identity);
+            bullet.Inst((_target - transform.position).normalized, _trash);
+            _time = 0;
+            _audioShot.Play();
+
+            if (_speed > 0)
             {
-                var bullet = Instantiate(_bulletWizard, transform.position, Quaternion.identity);
-                bullet.Inst((_target - transform.position).normalized, _trash);
-                _time = 0;
-                _audioShot.Play();
-
-                return;
+                isWork = false;
+                StopCoroutine(ApplyDamage());
             }
-
-            _time += Time.deltaTime;
         }
     }
 }

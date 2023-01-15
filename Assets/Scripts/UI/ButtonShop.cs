@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,19 +17,14 @@ public class ButtonShop : MonoBehaviour
     private void OnEnable()
     {
         _button.onClick?.AddListener(UpgrateInId);
+        _balance.ChangeBalance += ChangeButtonState;
+        ChangeButtonState();
     }
 
     private void OnDisable()
     {
         _button.onClick?.RemoveListener(UpgrateInId);
-    }
-
-    private void Update()
-    {
-        if (_price <= _balance.Money && _isPressed == false)
-            _button.interactable = true;
-        else
-            _button.interactable = false;
+        _balance.ChangeBalance -= ChangeButtonState;
     }
 
     public void Inst(int price, int productId, float upgrate, ShopDistributor shopDistributor, Balance balance, int value)
@@ -44,9 +37,12 @@ public class ButtonShop : MonoBehaviour
         _value = value;
     }
 
-    public void IsPressed()
+    public void ChangeButtonState()
     {
-        _isPressed = true;
+        if (_price <= _balance.Money)
+            _button.interactable = true;
+        else
+            _button.interactable = false;
     }
 
     private void UpgrateInId()

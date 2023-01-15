@@ -47,7 +47,7 @@ public class ShopDistributor : MonoBehaviour
                 else
                 {
                     _balance.ChangeMoney(price);
-                    buttonShop.IsPressed();
+                    buttonShop.ChangeButtonState();
                 }
 
                 break;
@@ -73,7 +73,7 @@ public class ShopDistributor : MonoBehaviour
                 else
                 {
                     _balance.ChangeMoney(price);
-                    buttonShop.IsPressed();
+                    buttonShop.ChangeButtonState();
                 }
 
                 break;
@@ -87,7 +87,7 @@ public class ShopDistributor : MonoBehaviour
                 else
                 {
                     _balance.ChangeMoney(price);
-                    buttonShop.IsPressed();
+                    buttonShop.ChangeButtonState();
                 }
 
                 break;

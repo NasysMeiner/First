@@ -1,23 +1,20 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 
 public class Warrior : Enemy
 {  
-    public override void ApplyDamage()
+    public override IEnumerator ApplyDamage()
     {
-        if (_speed == 0)
-        {
-            if (_time >= _timeBetweenAttacks)
-            {
-                _objects[_currentAmount].TakeDamage(_damage);
-                _time = 0;
-                _audioShot.Play();
+        yield return new WaitForSeconds(_timeBetweenAttacks);
 
-                return;
-            }
+        _objects[_currentAmount].TakeDamage(_damage);
+        _time = 0;
+        _audioShot.Play();
 
-            _time += Time.deltaTime;
-        }
+        if (_speed > 0)
+            StopCoroutine(ApplyDamage());
+        else
+            StartCoroutine(ApplyDamage());
     }
 }
